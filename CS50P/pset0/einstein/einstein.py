@@ -1,0 +1,1 @@
+print(int(input("Input a number: "))*90000000000000000)
