@@ -1,0 +1,297 @@
+CS50 notes:
+
+Password for SSH: helvetefaen
+
+
+try:
+	stuff
+except ValueError:
+	pass #This will skip doing anything. 
+else: 
+	Do this if no exception.
+finally:
+	Do this always after anything happens above. At the end. 
+	
+SyntaxError = You fucked up. THis is an error with the syntax.
+
+
+assert to test functions.
+assert 2+2 == 4
+assert "cat" == AssertionError
+
+
+add a file called __init__.py to label this folder as a package, not just a module.
+
+
+access files with file. Use second option to say if it is read(r), write(w), append(a), or both read and write(rw)
+with open("names.txt", "a") as file:
+	file.write(f"{stuff}\n")
+	file.close()
+	
+	
+Grabbing information out of a file named students.csv that is listed student,house:
+students = []
+with open("students.csv", "r") as file:
+	for line in file:
+		name, house = line.rstrip().split(",")
+		student = {"name": name, "house": house}
+		students.append(student)
+
+def get_house(student):
+	return student["house"]
+
+for student in sorted(students, key=get_house):
+	print(f"{student['name']} is in {student['house']}.")
+	
+	
+	
+Lambda:
+Lambda is a function to create an unnamed function.  Basically use it to create a "def" function without naming it.
+instead of: 
+def get_house(student):
+	return student["house"]
+	
+lambda student: student["house"]
+
+
+csv reader:
+csv.DictReader - To read csv files with a dictionary at the top
+csv.read - To read CSV files without dictionaries
+
+
+REGEX STUFF
+import re 
+re.search(pattern, string, flags=0)
+re.sub(pattern, repl, string, count=0, flags=0) - substitute for something. replace pattern with repl on the string
+
+regex codes: 
+. = Any character except newline
+* = 0 or more repetitions
++ = 1 or more repetitions
+? = 0 or 1 repetition
+{m} = m repetitions
+{m, n} = m-n repetitions
+^ = Matches the start of the string
+$ = Matches the end of the string or just before the newline at the end of the string
+[] = Set of characters to look for specifically  [A-Za-z0-9] Would mean only upper and lowercase characters and numbers
+[^] = Complementing the set - Cannot match any of these characters
+() = Or stuff inside
+\d = Decimal digit
+\D = Not a decimal digit
+\s = whitespace characters
+\S = Not a whitespace character
+\w = Word + number + underscore(_) character
+\W = Not a Word + number + underscore(_) character
+A | B = either A or B
+(...) = A group, can do (A|B|C|D) to do A or B or C or D in this spot ||| CAN ALSO BE USED TO CAPTURE TEXT
+								matches = re.search("(.*) (.*)", name) will return 2 values for what's inside parentheses.
+								Here to capture the parentheses we use matches.group(1) and matches.group(2) 
+								or first, last = matches.groups()
+(?:...) = Non-capturing version 
+
+flags:
+re.IGNORECASE
+re.MULTILINE
+re.DOTALL
+example: re.search(".*", email, re.IGNORECASE)
+
+email = any@any.any
+example: re.search(".+@{1}.+\..{1, 4}", email)
+
+:= is a walrus operator. Check boolean and set value
+if matches := True:
+
+
+
+raise errors:
+raise ValueError("Missing name")
+
+
+Classes:
+should be titlecase. (Student, DiscordAccount)
+Use ... as a placeholder to make the class valid. 
+
+self = instance of class
+cls = class itself
+
+class student:
+Required to have a __init__ function. This is when the class is called like student = 
+def __init__(self):
+
+Can do def __str__(self):
+	return "a student"
+For anytime anyone wants to print() the class.  It will return the __str__ return function. 
+
+@property
+
+decorators
+
+
+in classes you have setters and getters.
+You can have def house x2 both as a setter(@property) and a getter(@variable.setter). Can use an underscore to not get conflict if we're previously trying to set it. 
+
+the underscore is accessing the variable value directly, without any of the code. 
+If you use @name.setter and add error checking, you would use _name to bypass all that and set the value directly. 
+Ok, so the underscore is not needed at all? It's just a signal to the coder not to touch it? David had said we needed it to not conflict with self.name in the __init__ function?
+
+Both are true! It's a signal to not touch the value _name directly, and to instead touch it through name, for example, which is a full-fledged property that has error-checking. _name, by contrast, is a simple value with no error-checking.
+
+@property # A getter
+def house(self): # Getter
+	return self._house
+	
+@house.setter # A setter
+def house(self, house):
+	self._house = house
+
+@classmethod # To define it's not an instance method, this is a class method, without access to self. We use cls. self is to reference 
+class Hat:
+	houses = ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]
+	@classmethod
+	    def sort(cls, name):
+        print(name, "is in", random.choice(cls.houses))
+Hat.sort("Harry")
+
+Otherexample:
+class Student:
+	def __init__(self, name, house):
+		self.name = name
+		self.house = house
+	
+	@classmethod
+	def get(cls):
+		name = input("Name: ")
+		house = input("House: ")
+		return cls(name, house)
+		
+@staticmethod
+classes can inherit from other classes.
+class Wizard:
+	def __init__(self, name):
+		self.name = name
+
+class Student(Wizard):
+	def __init__(self, name):
+		super().__init__(name) # Call the superclass(parent class) and run__init__ from the superclass.
+	
+	
+class Wallet:
+	def __init__(self, amount):
+		self.amount = amount
+	
+	def __add__(self, other) # Define what happens when adding 2 classes together. 
+		total = self.amount + other.amount
+		return self(total)
+
+
+debugging:
+breakpoint: what line do I want to pause on
+When run and debugging you can step through line by line. The step into command. Stepping into the break point, and go step by step through your code
+Step over moves to the next line.  
+
+
+Other:
+pylint - a linter for sticking to style guide PEP8. It sticks to rules A LOT. Way over the top. 
+pycodestyle - pycodestyle.pycqa.org - formatting my code for me. More popular than pylint
+black - black.readthedocs.io - another style guide that is gaining traction. Opinionated formatting.
+
+set - datatype with no duplicates
+houses = set()
+compared to houses = list() or []
+
+global variable:
+Putting variables outside of functions can be used inside functions.
+
+constant variable:
+Capitalize the variable to indicate it is constant.
+
+mypy - mypy.readthedocs.io - Checks if our variables are using the right types
+
+type hint: To tell Python what type the variable should be. 
+def moew(n: int):
+	for _ in range(n)
+number: int = input("Number: ")
+
+Specify return value of a function:
+def meow(n) -> None:
+	print("Meow")
+	
+def meow(n) -> str:
+
+
+DocString: Official way to give documentation to each function. The stuff in comments will do things based on what's written. This is re-structured text. Not Python. It is something in Python to 
+def meow(n):
+    """Meow n times.
+	:param n: Number of times to meow
+	:type n: int
+	:raise TypeError: If n is not an int
+	:return: A string of n meows, one per line
+	:rtype: str
+	"""
+
+
+Good argv library: argparse - A library for parsing argv functions. - https://docs.python.org/3/library/argparse.html
+It also gives a -h argv function for help. description/help/ is optional. type=int converts it automatically to type specified. the args.n is because argument is -n.
+parser = argparse.ArgumentParser(description = "Meow like a cat")
+parser.add_argument("-n", default=1, help="number of times to meow", type=int)
+args = parser.parse_args()
+
+for _ in range(args.n):
+	print("meow")
+
+
+unpack: The start is unpacking a thing. If you pass a list with star in front you are unpacking that list with each individual item in the list.
+def total(galleons, sickles, knuts):
+	return(galleons * 17 + sickles) * 29 + knuts
+coins = [100, 50, 25]
+print(total(*coins), "Knuts")  # * is for unpacking lists
+same as= print(total(coins[0], coins[1], coins[2]), "Knuts")
+or = print(total(galleons=100, sickles=50, knuts=25), "Knuts")
+
+or if coins = {"galleons": 100, "sickles": 50, "knuts": 25}
+print(total(**coins), "Knuts")  # ** is for unpacking dictionaries
+
+*args, **kwargs -- arguments and key word arguments. args converts input to tuple. kwargs converts to dictionary.
+def f(*args, **kwargs):  # Indicates the function is variatic. The number of arguments is variable. 
+f(galleons=100, sickles=50, knuts=25) # kwargs
+f(100, 50, 25) # args
+
+
+map: allows you to take sequence of values and map a function onto each of those values and get back all return values. Calling a function to each individual variable. 
+apply a function to every element of some sequence. 
+def yell(*words):
+	uppercased = map(str.upper, words)
+	print(*uppercased)
+
+yell("This", "is", "CS50")
+
+
+list comprehension: Create lists on the fly and action each item in list individually.
+def yell(*words):
+	uppercased = [word.upper() for word in words]
+	print(*uppercased)
+
+Another example of list comprehension:
+students = [{"name": "Hermione", "house": "Gryffindor"}, {"name": "Ron", "house": "Gryffindor"}, {"name": "Harry", "house": "Gryffindor"}]
+gryffindors = [
+	student["name"] for student in students if student["house"] == "Gryffindor"]
+
+
+filter: Return true or false 
+students = [{"name": "Hermione", "house": "Gryffindor"}, {"name": "Ron", "house": "Gryffindor"}, {"name": "Harry", "house": "Gryffindor"}]
+def is_gryffindor(s):
+	return s["house"] == "Gryffindor"
+	
+gryffindors = filter(is_gryffindor, students)
+
+for gryffindor in sorted(gryffindors, key=lambda s: s["name"]):
+	print(gryffindor["name"])
+
+
+CS50x COURSE NOTES:
+
+Week 0: Scratch
+
+
+
+
